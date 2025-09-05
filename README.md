@@ -24,6 +24,7 @@ Designed for the Departments to track student bills efficiently.
 ---
 
 ## 📂 Project Structure
+```
 department-payables/
 │-- app.py # Main Flask application
 │-- /templates # HTML templates
@@ -32,7 +33,7 @@ department-payables/
 │-- requirements.txt
 │-- .gitignore
 │-- README.md
-
+```
 
 ---
 
@@ -43,25 +44,32 @@ department-payables/
    cd department-payables
    ```
 2. Create a virtual environment:
-  ```bash
-  python -m venv venv
-  source venv/bin/activate   # On Linux/Mac
-  venv\Scripts\activate      # On Windows
-  ```
+     ```bash
+     python -m venv venv
+     source venv/bin/activate   # On Linux/Mac
+     venv\Scripts\activate      # On Windows
+     ```
 3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 4. Run the app:
-```bash
-python app.py
-```
+   ```bash
+   python app.py
+   ```
 
-✨ Future Improvements
+---
+
+## ✨ Future Improvements
 - Add authentication (admin & student login)
 - Export reports as PDF/Excel
 - Improve UI design
 - Add notifications system
 
-👨‍💻 Author
+---
+
+## 👨‍💻 Author
+
 Developed by Allan Jay Busante
+
+Co-developer Rojan Jay Andrew Sebolino
