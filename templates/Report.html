@@ -1,0 +1,815 @@
+{% extends "base.html" %}
+{% block style %}
+<head>
+<style>
+    body {
+        background: #95A5A6;
+        font-family: Arial, sans-serif;
+    }
+    .records {
+        margin: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        height: auto;
+        width: calc(100% - 60px);
+    }
+    .top-section {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+    }
+    .holder {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .department-card {
+        width: 100%;
+        height: 140px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: -5px 0px 0px 0px #00FF9C;
+    }
+    .sub-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+    .tax-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .printable-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .printable {
+        background-color: #FDF8E9;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 25px;
+        height: 450px;
+        width: 100%;
+        overflow-y: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+    .printable-content {
+        width: 100%;
+        height: auto;
+        text-align: center;
+        padding: 15px;
+        background-color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        overflow: auto;
+        border-radius: 8px;
+    }
+    .printable-content table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+    .printable-content th {
+        padding: 8px;
+        border: 1px solid #ddd;
+        font-size: clamp(10px, 12px, 14px);
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background-color: #334EAC;
+        color: #ffffff;
+        font-weight: bold;
+    }
+    .printable-content td {
+        padding: 8px;
+        border: 1px solid #ddd;
+        font-size: clamp(10px, 11px, 12px);
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background-color: #f9f9f9;
+    }
+    .printable-content h2 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .printable-content p {
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 15px 0;
+        color: #555;
+    }
+    .printable-content p.date {
+        font-style: italic;
+        color: #777;
+        margin-top: 25px;
+        font-size: 13px;
+    }
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+    .printable button {
+        background-color: #007BFF;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 20px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    .printable button:hover {
+        background-color: #0056B3;
+        transform: scale(1.05);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    .taxBtn {
+        align-self: flex-end;
+        background-color: #007BFF;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 20px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+    .taxBtn:hover {
+        background-color: #0056B3;
+        transform: scale(1.05);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    .fund-card {
+        width: 100%;
+        height: 120px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin: 0;
+    }
+    .tax-card {
+        width: 100%;
+        height: 110px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: -5px 0px 0px 0px #FFD700;
+    }
+
+    .tax-card .header,
+    .fund-card .header,
+    .department-card .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .tax-card .header span,
+    .fund-card .header span,
+    .department-card {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .header span {
+        font-size: 30px;
+        font-weight: bold;
+        color: #333;
+    }
+    .tax-card input {
+        width: 70%;
+        padding: 5px;
+        font-size: 14px;
+        border: 1px solid #D3D3D3;
+        border-radius: 5px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .tax-card input:focus {
+        outline: none;
+        border-color: #007BFF;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+    .fund-card .amount,
+    .department-card .amount {
+        font-size: 18px; /* Consistent font size */
+        font-weight: bold;
+        color: #333;
+    }
+    .MF {
+        box-shadow: -5px 0px 0px 0px #4F75FF;
+    }
+    .OF {
+        box-shadow: -5px 0px 0px 0px #FF4D4D;
+    }
+    .PF {
+        box-shadow: -5px 0px 0px 0px #FF6B6B;
+    }
+    .SF {
+        box-shadow: -5px 0px 0px 0px #49ACCA;
+    }
+    .icons {
+        display: flex;
+        gap: 10px;
+    }
+    .icons img {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+    .icons img:hover {
+        transform: scale(1.2);
+    }
+    .non-printable {
+        display: block;
+    }
+    @media print {
+        body {
+            margin: 20px;
+            font-family: Arial;
+            background: #fff;
+        }
+        button, nav, .non-printable {
+            display: none !important;
+        }
+        .printable {
+            height: auto;
+            width: 100%;
+            overflow: visible;
+            box-shadow: none;
+            padding: 0;
+        }
+        .printable-content {
+            height: auto;
+            overflow: visible;
+            padding: 20px;
+            box-shadow: none;
+        }
+        .printable-content th, .printable-content td {
+            font-size: 12px;
+        }
+
+        th {
+            font-weight: bold !important;
+            color: black !important;
+        }
+    }
+    @media (max-width: 768px) {
+        .top-section {
+            grid-template-columns: 1fr;
+        }
+        .sub-cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .printable {
+            width: 100%;
+            height: 400px;
+            padding: 0px;
+        }
+        .printable-content {
+            padding: 10px;
+        }
+        .printable-content h2 {
+            font-size: 16px;
+        }
+        .printable-content p {
+            font-size: 12px;
+        }
+        .printable-content th, .printable-content td {
+            font-size: clamp(8px, 9px, 10px);
+        }
+        .department-card, .fund-card, .tax-card {
+            height: 100px;
+        }
+        .fund-card .amount, .department-card .amount {
+            font-size: 16px; /
+        }
+    }
+    #departmentFunds{
+        font-size: 30px;
+    }
+    #uniform ,#module,#org, #penalty,
+    #defense, #others{
+        font-size: 20px;
+
+
+    }
+</style>
+</head>
+{% endblock %}
+{% block content %}
+<body>
+    <section class="records">
+        <div class="top-section">
+            <div class="holder">
+                <div class="department-card">
+                    <div class="header">
+                        <span>Payment Collected</span>
+                        <div class="icons">
+                            <img src="static/printer.png" class="printer-img" onclick="printFunds()" alt="Print">
+                        </div>
+                    </div>
+                    <div class="amount">
+                       <span id="departmentFunds">₱{{ departmentFunds }}</span>
+                        <input type="hidden" name="h-departmentFunds" id="h-departmentFunds" value="{{ departmentFunds }}">
+                    </div>
+                </div>
+                <div class="sub-cards">
+                    <div class="fund-card MF">
+                        <div class="header">
+                            <span>UNIFORM FUNDS</span>
+                        </div>
+                        <div class="amount">
+                            <span id="uniform">₱{{ uniform }}</span>
+                            <input type="hidden" name="h-uniform" id="h-uniform" value="{{ uniform }}">
+                        </div>
+                    </div>
+                    <div class="fund-card MF">
+                        <div class="header">
+                            <span>MODULE FUNDS</span>
+                        </div>
+                        <div class="amount">
+                            <span id="module">₱{{ module }}</span>
+                            <input type="hidden" name="h-module" id="h-module" value="{{ module }}">
+                        </div>
+                    </div>
+                    <div class="fund-card OF">
+                        <div class="header">
+                            <span>ORGANIZATION FUNDS</span>
+                        </div>
+                        <div class="amount">
+                            <span id="org">₱{{ org }}</span>
+                            <input type="hidden" name="h-org" id="h-org" value="{{ org }}">
+                        </div>
+                    </div>
+                    <div class="fund-card PF">
+                        <div class="header">
+                            <span>PENALTY FUNDS</span>
+                        </div>
+                        <div class="amount">
+                            <span id="penalty">₱{{ penalty }}</span>
+                            <input type="hidden" name="h-penalty" id="h-penalty" value="{{ penalty }}">
+                        </div>
+                    </div>
+                    <div class="fund-card SF">
+                        <div class="header">
+                            <span>DEFENSE FUNDS</span>
+                        </div>
+                        <div class="amount">
+                            <span id="defense">₱{{ defense }}</span>
+                            <input type="hidden" name="h-defense" id="h-defense" value="{{ defense }}">
+                        </div>
+                    </div>
+                    <div class="fund-card SF">
+                        <div class="header">
+                            <span>OTHER FUNDS</span>
+                        </div>
+                        <div class="amount">
+                            <span id="others">₱{{ others }}</span>
+                            <input type="hidden" name="h-others" id="h-others" value="{{ others }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tax-section">
+                <div class="tax-card">
+                    <div class="header">
+                        <span>Module Shares</span>
+                    </div>
+                    <form action="/report" method="POST" onsubmit="saveScrollPosition()">
+                        <input type="number" class="tax" name="tax" id="taxAmount" value="{{ departmentTax }}" required min="0">
+                        <button type="submit" class="taxBtn">Update amount</button>
+                    </form>
+                </div>
+                <div class="tax-card fund-card">
+                    <div class="header">
+                        <span>Total Module Shares</span>
+                    </div>
+                    <div class="amount">
+                        ₱<span id="tax">{{ totalModuleTax }}</span>
+                    </div>
+                </div>
+                <div class="tax-card">
+                    <div class="header">
+                        <span>Uniform Shares</span>
+                    </div>
+                    <form action="/report" method="POST" onsubmit="saveScrollPosition()">
+                        <input type="number" class="tax" name="unif" id="unifTaxAmount" value="{{ uniformTax }}" required min="0">
+                        <button type="submit" class="taxBtn">Update amount</button>
+                    </form>
+                </div>
+                <div class="tax-card fund-card">
+                    <div class="header">
+                        <span class="Taxheader">Total Uniform Shares</span>
+                    </div>
+                    <div class="amount">
+                        ₱<span id="unif">{{ totalUniformTax }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="printable-section">
+            <div class="printable" id="student-reports">
+                <div class="printable-content">
+                    <h2>Student Reports</h2>
+                    <table class="table-content">
+                        <thead>
+                            <tr>
+                                {% set ns = namespace(stats=false) %}
+                                {% for student in students_year %}
+                                    {% if student.status %}
+                                        {% set ns.stats = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if not ns.stats %}
+                                    {% if students_year %}
+                                        <th>Student Number</th>
+                                        <th>Name</th>
+                                        <th>Previous Balance</th>
+                                        {% for x in range(8) %}
+                                            <th></th>
+                                        {% endfor %}
+                                        <th>Total Balance</th>
+                                    {% endif %}
+                                {% else %}
+                                    {% if students_year %}
+                                        <th>Student Number</th>
+                                        <th>Name</th>
+                                        <th>Previous Balance</th>
+                                        {% set pps = namespace(payablecnt=0) %}
+                                        {% for payable in payables %}
+                                            <th>{{ payable.payable_name }}</th>
+                                            {% set pps.payablecnt = pps.payablecnt + 1 %}
+                                        {% endfor %}
+                                        {% if pps.payablecnt < 8 %}
+                                            {% for _ in range(8 - pps.payablecnt) %}
+                                                <th></th>
+                                            {% endfor %}
+                                        {% endif %}
+                                        <th>Total Balance</th>
+                                    {% endif %}
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            {% set ns = namespace(totalPreviousBal=0) %}
+                            {% set ts = namespace(totalBal=0) %}
+                            {% for student in students_year %}
+                                {% set ns.totalPreviousBal = ns.totalPreviousBal+get_previous_remaining_bal(student.id) %}
+                                {% set ts.totalBal = ts.totalBal+get_remaining_bal(student.id) %}
+                            <tr id="student-row-{{ student.id }}">
+                                <td>{{ student.student_number }}</td>
+                                <td>
+                                    <span class="view-data name-view">{{ student.name }}</span>
+                                </td>
+                                <td>
+                                    <span class="view-data contactNum-view">{{ get_previous_remaining_bal(student.id) }}</span>
+                                </td>
+
+                                {% set ns = namespace(status=false) %}
+                                {% for student in students_year %}
+                                    {% if student.status %}
+                                        {% set ns.status = true %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if not ns.status %}
+                                    {% set ns = namespace(cnt=0) %}
+                                        {% for sp in student.student_payables %}
+                                            {% if sp.semester == selected_semester %}
+                                                <td>
+                                                {% if sp.is_paid %}
+                                                    <span class="view-data contactNum-view">
+                                                        {{ sp.payable.payable_name }} (PAID)
+                                                    </span>
+                                                {% else %}
+                                                    <span class="view-data contactNum-view">
+                                                        {{ sp.payable.payable_name }} ({{ sp.payable.amount }})
+                                                    </span>
+                                                {% endif %}
+                                                </td>
+                                                {% set ns.cnt = ns.cnt + 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    {% if ns.cnt < 8 %}
+                                        {% for _ in range(8 - ns.cnt) %}
+                                            <td><span class="view-data contactNum-view"></span></td>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                {% else %}
+                                    {% set cols = namespace(emptycols=0) %}
+                                    {% for payable in payables %}
+                                        {% set ns = namespace(found=false) %}
+                                        <td>
+                                            {% for sp in student.student_payables %}
+                                                {% if sp.semester == selected_semester %}
+                                                    {% if sp.payable.payable_name == payable.payable_name %}
+                                                        {% if sp.is_paid %}
+                                                            <span class="view-data contactNum-view">PAID</span>
+                                                        {% else %}
+                                                            <span class="view-data contactNum-view">{{ payable.amount }}</span>
+                                                        {% endif %}
+                                                        {% set ns.found = true %}
+                                                        {% set cols.emptycols = cols.emptycols + 1 %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if not ns.found %}
+                                                <span class="view-data contactNum-view"></span>
+                                                {% set cols.emptycols = cols.emptycols + 1 %}
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+
+                                    {% if cols.emptycols < 8 %}
+                                        {% for _ in range(8 - cols.emptycols) %}
+                                            <td><span class="view-data contactNum-view"></span></td>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                                <td>
+                                    <span class="view-data contactNum-view">{{ get_remaining_bal(student.id) }}</span>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="12">No students found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Total</td>
+                                <td></td>
+                                <td><span>{{ ns.totalPreviousBal }}</span></td>
+                                {% for student in students_year %}
+                                    {% if student.status %}
+                                        {% set ns.status = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if ns.status %}
+                                    {% set tcs = namespace(totalcnt=0) %}
+                                    {% set ps = namespace(totalPayable=0) %}
+                                        {% for payable in payables %}
+                                            {% set pb = namespace(isfound=true) %}
+                                            {% for student in students_year %}
+                                                {% for sp in student.student_payables %}
+                                                    {% if sp.semester == selected_semester and sp.payable.payable_name == payable.payable_name %}
+                                                        {% if not sp.is_paid %}
+                                                            {% set ps.totalPayable = ps.totalPayable + payable.amount %}
+                                                            {% set pb.isfound = true %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                            <td><span>{{ ps.totalPayable }}</span></td>
+                                            {% set ps.totalPayable = 0 %}
+                                            {% if pb.isfound %}
+                                                {% set tcs.totalcnt = tcs.totalcnt + 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if tcs.totalcnt < 8 %}
+                                            {% for _ in range(8 - tcs.totalcnt) %}
+                                                <td><span class="view-data contactNum-view"></span></td>
+                                            {% endfor %}
+                                        {% endif %}
+                                {% else %}
+                                    {% for _ in range(8) %}
+                                        <td><span class="view-data contactNum-view"></span></td>
+                                    {% endfor %}
+                                {% endif %}
+                                <td><span>{{ ts.totalBal }}</span></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="button-container">
+                    <form method="GET" action="/report" onsubmit="saveScrollPosition()">
+                        <button name="year" type="submit" value="{{ current_first_year }}">1ST YEAR</button>
+                        <button name="year" type="submit" value="{{ current_first_year - 1 }}">2ND YEAR</button>
+                        <button name="year" type="submit" value="{{ current_first_year - 2 }}">3RD YEAR</button>
+                        <button name="year" type="submit" value="{{ current_first_year - 3 }}">4TH YEAR</button>
+                        <button name="year" type="submit" value="01">Irregular</button>
+                        <button onclick="printPage('student-reports')">Print</button>
+                    </form>
+                </div>
+            </div>
+            <div class="printable" id="payable-reports">
+                <div class="printable-content">
+                    <h2>Payable Reports</h2>
+                        <table class="table-content">
+                        {% set ds = namespace(totalDepartmentFunds=0) %}
+                        {% set cf = namespace(
+                            uniformFunds=0,
+                            moduleFunds=0,
+                            penaltyFunds=0,
+                            orgFunds=0,
+                            defenseFunds=0,
+                            otherFunds=0
+                        ) %}
+
+                        {% for category in payable_categories %}
+                            <tr>
+                                {% if category == "uniform" %}
+                                    <th colspan="4">UNIFORM FUNDS</th>
+                                {% elif category == "module" %}
+                                    <th colspan="4">MODULE FUNDS</th>
+                                {% elif category == "org"%}
+                                    <th colspan="4">ORGANIZATION FUNDS</th>
+                                {% elif category == "penalty"%}
+                                    <th colspan="4">PENALTY FUNDS</th>
+                                {% elif category == "defense"%}
+                                    <th colspan="4">DEFENSE FUNDS</th>
+                                {% else %}
+                                    <th colspan="4">OTHER FUNDS</th>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                <th>Payable</th>
+                                <th>Amount</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                            <tbody id="deptFunds">
+                                {% set ts = namespace(totalFunds=0) %}
+                                {% for payable in allpayables %}
+                                    {% if payable.category == category %}
+                                        {% set qs = namespace(qnt=0) %}
+                                        {% for s in allstudents %}
+                                            {% for sp in s.student_payables %}
+                                                {% if sp.payable.payable_name == payable.payable_name %}
+                                                    {% if sp.is_paid %}
+                                                        {% set qs.qnt = qs.qnt + 1 %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                        <tr>
+                                            <td><span>{{ payable.payable_name }}</span></td>
+                                            <td><span>{{ payable.amount }}</span></td>
+                                            <td><span>{{ qs.qnt }}</span></td>
+                                            <td><span>{{ payable.amount * qs.qnt }}</span></td>
+                                        </tr>
+                                        {% set ts.totalFunds = ts.totalFunds + (payable.amount * qs.qnt) %}
+                                        {% set qs.qnt = 0 %}
+                                    {% endif %}
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td>Total:</td>
+                                    <td>{{ ts.totalFunds }}</td>
+                                </tr>
+                                {% set ds.totalDepartmentFunds = ds.totalDepartmentFunds|float + ts.totalFunds|float %}
+
+                                {% if category == "uniform" %}
+                                    {% set cf.uniformFunds = cf.uniformFunds + ts.totalFunds|float %}
+                                {% elif category == "module" %}
+                                    {% set cf.moduleFunds = cf.moduleFunds + ts.totalFunds|float %}
+                                {% elif category == "org"%}
+                                    {% set cf.orgFunds = cf.orgFunds + ts.totalFunds|float %}
+                                {% elif category == "penalty"%}
+                                    {% set cf.penaltyFunds = cf.penaltyFunds + ts.totalFunds|float %}
+                                {% elif category == "defense"%}
+                                    {% set cf.defenseFunds = cf.defenseFunds + ts.totalFunds|float %}
+                                {% else %}
+                                    {% set cf.otherFunds = cf.otherFunds + ts.totalFunds|float %}
+                                {% endif %}
+
+                                {% set ts.totalFunds = 0 %}
+                                <tr>
+                                    <td colspan="4" style="border: none; background-color: #FFFFFF;"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="border: none; background-color: #FFFFFF;"></td>
+                                </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="button-container">
+                    <button onclick="printPage('payable-reports')">Print</button>
+                </div>
+            </div>
+            <div class="printable" id="printableFund">
+                <div class="printable-content">
+                    <h2>Funds Summary</h2>
+                    <table class="table-content funds-table">
+                        <thead>
+                            <tr style="background-color: #007BFF; color: white;">
+                                <th>Fund Type</th>
+                                <th>Amount</th>
+                                <th>Shares Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Uniform Funds</td>
+                                <td>₱<span>{{ uniform }}</span></td>
+                                <td>₱{{ totalUniformTax }}</td>
+                            </tr>
+                            <tr>
+                                <td>Module Total</td>
+                                <td>₱<span>{{ module }}</span></td>
+                                <td>₱{{ totalModuleTax  }}</td>
+                            </tr>
+                            <tr>
+                                <td>Organization Funds</td>
+                                <td>₱<span>{{ org }}</span></td>
+                                <td>₱0</td>
+                            </tr>
+                            <tr>
+                                <td>Penalty Funds</td>
+                                <td>₱<span>{{ penalty }}</span></td>
+                                <td>₱0</td>
+                            </tr>
+                            <tr>
+                                <td>Defense Funds</td>
+                                <td>₱<span>{{ defense }}</span></td>
+                                <td>₱0</td>
+                            </tr>
+                            <tr>
+                                <td>Other Funds</td>
+                                <td>₱<span>{{ others }}</span></td>
+                                <td>₱0</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2" style="text-align: center;">Payment Collected: ₱<span>{{ departmentFunds }}</span></td>
+                                <td>Total Shares Amount: ₱{{ totalUniformTax + totalModuleTax  }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="button-container">
+                    <button onclick="printPage('printableFund')">Print</button>
+                </div>
+            </div>
+        </div>
+    </section>
+     <script>
+        function printPage(sectionId) {
+            const scrollPosition = window.scrollY;
+            const content = document.getElementById(sectionId).innerHTML;
+            const original = document.body.innerHTML;
+            document.body.innerHTML = content;
+            window.print();
+            document.body.innerHTML = original;
+            window.scrollTo(0, scrollPosition);
+        }
+
+        function printFunds() {
+            const scrollPosition = window.scrollY;
+            const content = document.getElementById("printableFund").innerHTML;
+            const original = document.body.innerHTML;
+            document.body.innerHTML = content;
+            window.print();
+            document.body.innerHTML = original;
+            window.scrollTo(0, scrollPosition);
+        }
+
+        function saveScrollPosition() {
+            sessionStorage.setItem('scrollPosition', window.scrollY);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollPosition = sessionStorage.getItem('scrollPosition');
+            if (scrollPosition !== null) {
+                window.scrollTo(0, parseInt(scrollPosition));
+                sessionStorage.removeItem('scrollPosition');
+            }
+        });
+
+        window.addEventListener('beforeunload', saveScrollPosition);
+    </script>
+</body>
+{% endblock %}

@@ -1,0 +1,468 @@
+{% extends "base.html" %}
+{% block title %}Student Payable{% endblock %}
+{% block content %}
+<style>
+       * {
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+        body {
+            -webkit-font-smoothing: antialiased;
+               background: #95A5A6;
+
+        }
+   
+
+     h1 { 
+        
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 0;
+            background-color: #F0E8D9;
+            border-radius: 5px;
+        }
+    h2 {
+        color: #34495e;
+        font-size: 1.4em;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    h3 {
+        color: #555;
+        margin: 20px 0;
+        text-align: center;
+        font-size: 1.1em;
+        font-weight: 500;
+    }
+
+    
+    .search-container {
+        position: relative;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    #search {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 0.95em;
+        box-sizing: border-box;
+        background-color: #fff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+    }
+
+    #search::placeholder {
+        color: #999;
+    }
+
+    #search:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+        background-color: #f9f9f9;
+    }
+
+    #searchResults {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        max-height: 250px;
+        overflow-y: auto;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: none;
+    }
+
+    #searchResults li {
+        padding: 12px 15px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s;
+        font-size: 0.9em;
+    }
+
+    #searchResults li:last-child {
+        border-bottom: none;
+    }
+
+    #searchResults li:hover {
+        background-color: #ecf5ff;
+    }
+
+    #selectedStudent {
+        background-color: #fff;
+        padding: 15px 20px;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        margin: 25px auto;
+        display: flex;
+        flex-direction: row; /* Changed to row for side-by-side layout */
+        align-items: center;
+        width: 450px;
+        max-width: 100%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        gap: 20px;
+    }
+
+    #selectedStudent h2 {
+        font-size: 1.3em;
+        font-weight: 600;
+        color: #2c3e50;
+        text-align: left;
+        margin-bottom: 10px;
+    }
+
+    #studentImage {
+        width: 100px;
+        height: 100px;
+        border-radius: 6px;
+        object-fit: cover;
+        border: 1px solid #ddd;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    #studentInfo {
+        font-size: 0.9em;
+        color: #444;
+        display: flex;
+        flex-direction: column; 
+        gap: 8px;
+        flex: 1; 
+    }
+
+    .student-details {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    table {
+        width: 100%;
+        max-width: 700px;
+        margin: 20px auto;
+        border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    th {
+        background:#334EAC;
+        color: #fff;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.9em;
+    }
+
+    tr:hover {
+        background-color: #f7f7f7;
+    }
+
+    button {
+        padding: 8px 16px;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9em;
+        margin: 5px;
+        transition: background-color 0.3s, transform 0.1s;
+    }
+
+    button:hover {
+        background-color: #2980b9;
+        transform: scale(1.02);
+    }
+
+    button[type="button"][onclick*="deletePayable"] {
+        background-color: #e74c3c;
+    }
+
+    button[type="button"][onclick*="deletePayable"]:hover {
+        background-color: #c0392b;
+    }
+
+    button[onclick="assignPayables()"] {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #16610E;
+        font-weight: 500;
+    }
+
+    button[onclick="assignPayables()"]:hover {
+        background-color: #27ae60;
+    }
+
+    #totalAmount {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    #payableForm {
+        text-align: center;
+    }
+
+    .payable-checkbox {
+        transform: scale(1.2);
+        margin-right: 10px;
+        accent-color: #3498db;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #selectedStudent {
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            padding: 15px;
+        }
+        #studentImage {
+            width: 80px;
+            height: 80px;
+        }
+        #studentInfo {
+            align-items: center;
+            text-align: center;
+        }
+        table {
+            font-size: 0.85em;
+        }
+        th, td {
+            padding: 8px 10px;
+        }
+        button {
+            padding: 6px 12px;
+            font-size: 0.85em;
+        }
+    }
+</style>
+
+<script>
+    let students = JSON.parse('{{ students | tojson | safe }}');
+    let selectedStudentId = null;
+
+    function filterStudents() {
+        let search = document.getElementById("search").value.toLowerCase();
+        let resultsList = document.getElementById("searchResults");
+        resultsList.innerHTML = "";
+
+        if (search.trim() === "") {
+            resultsList.style.display = "none";
+            return;
+        }
+
+        let hasResults = false;
+        students.forEach(student => {
+            if (student.name.toLowerCase().includes(search) || student.student_number.includes(search)) {
+                let li = document.createElement("li");
+                li.textContent = student.student_number + " - " + student.name;
+                li.onclick = function () {
+                    document.getElementById("studentInfo").textContent = student.student_number + " - " + student.name;
+                    const imagePath = student.image_path ? `{{ url_for('static', filename='') }}${student.image_path}` : '/static/default.jpg';
+                    document.getElementById("studentImage").src = imagePath;
+                    document.getElementById("selectedStudent").style.display = "flex";
+                    document.getElementById("selectedStudent").dataset.studentId = student.id;
+                    selectedStudentId = student.id;
+                    resultsList.innerHTML = "";
+                    resultsList.style.display = "none";
+                };
+                resultsList.appendChild(li);
+                hasResults = true;
+            }
+        });
+
+        resultsList.style.display = hasResults ? "block" : "none";
+    }
+
+    // Hide search results when clicking outside
+    document.addEventListener("click", function(event) {
+        const searchContainer = document.querySelector(".search-container");
+        if (!searchContainer.contains(event.target)) {
+            document.getElementById("searchResults").style.display = "none";
+        }
+    });
+</script>
+<h1>Student Payables</h1>
+
+<!-- Search Bar -->
+<div class="search-container">
+    <input type="text" id="search" placeholder="Search student..." onkeyup="filterStudents()">
+    <ul id="searchResults"></ul>
+</div>
+
+<!-- Selected Student Display -->
+<div id="selectedStudent" style="display: none;" data-student-id="">
+    <img id="studentImage" src="" alt="Student Image" onerror="this.src='/static/default.jpg'">
+    <div>
+        <h2>Selected Student:</h2>
+        <p id="studentInfo"></p>
+    </div>
+</div>
+
+<!-- Form to assign payables -->
+<form method="POST" id="payableForm">
+    <table class="sp-table">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>Payable Name</th>
+                <th>Amount</th>
+                <th>Quantity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payable in allpayables %}
+                <tr>
+                    <td><input type="checkbox" name="payables" value="{{ payable.id }}" class="payable-checkbox" data-amount="{{ payable.amount }}"></td>
+                    <td>{{ payable.payable_name }}</td>
+                    <td>{{ payable.amount }}</td>
+                    <td><input type="number" class="quantity" style="width: 35px;" value="1" required min="1" data-name="payable-quantity"></td>
+                    <td><button type="button" onclick="deletePayable('{{ payable.id }}')">Delete</button></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">No payables found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
+
+<!-- Total Amount -->
+<h3>Total Amount: <span id="totalAmount">0</span></h3>
+
+<!-- Assign Button -->
+<button onclick="assignPayables()">Assign Payables</button>
+
+<script>
+    let totalAmount = 0;
+    const rows = document.querySelectorAll("table.sp-table tbody tr");
+
+    rows.forEach((row) => {
+        const checkbox = row.cells[0].querySelector("input[type='checkbox']");
+        const quantityInput = row.cells[3].querySelector("input.quantity");
+
+        checkbox.addEventListener("change", function () {
+            let amount = parseFloat(this.dataset.amount);
+            let quantity = parseInt(quantityInput.value) || 1;
+
+            if (this.checked) {
+                totalAmount += (amount * quantity);
+            } else {
+                totalAmount -= (amount * quantity);
+            }
+
+            document.getElementById("totalAmount").innerText = totalAmount.toFixed(2);
+        });
+
+        quantityInput.addEventListener("change", function () {
+            totalAmount = 0;
+            rows.forEach((r) => {
+                const cb = r.cells[0].querySelector("input[type='checkbox']");
+                const qty = parseInt(r.cells[3].querySelector("input.quantity").value) || 1;
+                const amt = parseFloat(cb.dataset.amount);
+                if (cb.checked) {
+                    totalAmount += (amt * qty);
+                }
+            });
+            document.getElementById("totalAmount").innerText = totalAmount.toFixed(2);
+        });
+    });
+
+    function deletePayable(id) {
+        if (confirm("Are you sure you want to delete this payable?")) {
+            fetch(`/delete_payable/${id}`, { method: "DELETE" })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Payable deleted successfully!");
+                    location.reload();
+                } else {
+                    alert("Error deleting payable.");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    }
+
+    function assignPayables() {
+        if (!selectedStudentId) {
+            alert("Please select a student first.");
+            return;
+        }
+
+        let selectedPayables = [];
+
+        document.querySelectorAll(".payable-checkbox").forEach((checkbox, index) => {
+            if (checkbox.checked) {
+                let row = checkbox.closest("tr");
+                let quantity = parseInt(row.querySelector(".quantity").value) || 1;
+                selectedPayables.push({
+                    id: checkbox.value,
+                    quantity: quantity
+                });
+            }
+        });
+
+        fetch("/assign_payables", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                student_id: selectedStudentId,
+                payables: selectedPayables
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message || "Payables assigned!");
+        })
+        .catch(error => {
+            console.error("Error assigning payables:", error);
+            alert("Something went wrong.");
+        });
+    }
+
+    function submitForm() {
+        if (!selectedStudentId) {
+            alert("Please select a student first.");
+            return;
+        }
+
+        let studentInput = document.createElement('input');
+        studentInput.type = 'hidden';
+        studentInput.name = 'student_id';
+        studentInput.value = selectedStudentId;
+
+        document.getElementById("payableForm").appendChild(studentInput);
+        document.getElementById("payableForm").submit();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,424 @@
+{% extends "base.html" %}
+{% block title %}Payment{% endblock %}
+{% block content %}
+<head>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #95A5A6;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 0;
+            background-color: #F0E8D9;
+            border-radius: 5px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin: 15px 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        h3 {
+            color: #2980b9;
+            margin: 15px 0;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        #search {
+            width: 100%;
+            max-width: 450px;
+            padding: 12px;
+            margin: 0 auto 15px;
+            display: block;
+            border: 1px solid #D3D3D3;
+            border-radius: 6px;
+            font-size: 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #search:focus {
+            outline: none;
+            border-color: #2980b9;
+            box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
+        }
+
+        #searchResults {
+            list-style: none;
+            padding: 0;
+            max-width: 450px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            max-height: 250px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        #searchResults::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #searchResults::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #searchResults::-webkit-scrollbar-thumb {
+            background: rgba(136, 136, 136, 0.3);
+            border-radius: 4px;
+        }
+
+        #searchResults::-webkit-scrollbar-thumb:hover {
+            background: rgba(136, 136, 136, 0.5);
+        }
+
+        #searchResults li {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+
+        #searchResults li:hover {
+            background-color: #E6F0FA;
+        }
+
+        #studentDetails {
+            background: #ffffff;
+            padding: 25px;
+            margin: 25px auto;
+            max-width: 650px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            padding-top: 35px;
+        }
+
+        #studentPayablesList {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        #studentPayablesList li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 8px;
+            font-weight: 600;
+            color: #34495e;
+            font-size: 16px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #D3D3D3;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #2980b9;
+            box-shadow: 0 0 8px rgba(41, 128, 185, 0.3);
+        }
+
+        button {
+            background-color: #28A745;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: scale(1);
+            box-shadow: none;
+        }
+
+        .isPaid {
+            color: #28a745;
+            font-size: 20px;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .flash-messages {
+            text-align: center;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            display: block;
+            padding: 10px 20px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .flash-success {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            font-size: 16px;
+        }
+
+        .flash-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            font-size: 16px;
+        }
+
+        .flash-info {
+            color: #0c5460;
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+            #search {
+                max-width: 100%;
+            }
+            #searchResults {
+                max-width: 100%;
+            }
+            #studentDetails {
+                max-width: 90%;
+                padding: 15px;
+            }
+            button {
+                width: 100%;
+                padding: 10px;
+                font-size: 14px;
+            }
+            .isPaid {
+                font-size: 18px;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+
+<h1>Student Payment</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- Search Bar -->
+<input type="text" id="search" placeholder="Search by student number or name..." onkeyup="filterStudents()">
+<ul id="searchResults"></ul>
+
+<!-- Student Info + Payables -->
+<div id="studentDetails" style="display: none;">
+    <h2 id="studentName"></h2>
+
+    <h3>Payables:</h3>
+    <ul id="studentPayablesList"></ul>
+
+    <h3>Total Amount: ₱<span id="totalBalance">0</span></h3>
+
+    <form id="paymentForm" method="POST" action="{{ url_for('process_payment') }}">
+        <input type="hidden" name="student_id" id="student_id">
+        <label for="amount_rendered">Amount Rendered: ₱</label>
+        <input type="number" name="amount_rendered" id="amount_rendered" required min="0" step="any" oninput="calculateChange()">
+        <h3>Payables to pay: ₱<span id="payablesToPay">0</span></h3>
+        <input type="hidden" name="payables_to_pay" id="payables_to_pay" value="0.00">
+        <h3>Change: ₱<span id="changeAmount">0</span></h3>
+        <h3>Remaining Balance: ₱<span id="remainingBalance">0</span></h3>
+        <input type="hidden" name="remainingBal" id="remainingBal" value="0.00">
+        <button type="submit" onclick="return checkBeforeSubmit(event)">Submit Payment</button>
+        <h1 class="isPaid" id="isPaid"></h1>
+    </form>
+</div>
+
+<script>
+    const students = {{ students | tojson | safe }};
+    const payables = {{ payables | tojson | safe }};
+    let selectedStudent = null;
+
+    function filterStudents() {
+        const search = document.getElementById("search").value.toLowerCase();
+        const resultsList = document.getElementById("searchResults");
+        resultsList.innerHTML = "";
+
+        students.forEach(student => {
+            if (
+                student.name.toLowerCase().includes(search) ||
+                student.student_number.includes(search)
+            ) {
+                const li = document.createElement("li");
+                li.textContent = `${student.student_number} - ${student.name}`;
+                li.onclick = () => showStudentDetails(student);
+                resultsList.appendChild(li);
+            }
+        });
+    }
+
+    let remainingBal;
+
+    function showStudentDetails(student) {
+        document.getElementById("searchResults").innerHTML = "";
+        document.getElementById("studentDetails").style.display = "block";
+        document.getElementById("studentName").textContent = `${student.name} (${student.student_number})`;
+        document.getElementById("student_id").value = student.id;
+
+        const studentPayablesList = document.getElementById("studentPayablesList");
+        studentPayablesList.innerHTML = "";
+
+        let total = 0;
+        payables.forEach(p => {
+            if (p.student_ids.includes(student.id)) {
+                const li = document.createElement("li");
+                const quantity = p.quantities[student.id] || 0;
+                const isPaid = p.is_paid[student.id] === true;
+                const totalAmount = p.amount * quantity;
+                if (quantity > 0) {
+                    if (isPaid) {
+                        li.innerHTML = `<input type="checkbox" name="${p.payable_name}" value="${totalAmount}" class="payable-checkbox" checked disabled> ${p.payable_name} (x${quantity}): ₱${totalAmount.toFixed(2)}`;
+                    } else {
+                        li.innerHTML = `<input type="checkbox" name="${p.payable_name}" value="${totalAmount}" class="payable-checkbox"> ${p.payable_name} (x${quantity}): ₱${totalAmount.toFixed(2)}`;
+                    }
+                    studentPayablesList.appendChild(li);
+                    total += parseFloat(totalAmount);
+                }
+            }
+        });
+
+        let payables_to_pay = 0;
+
+        document.querySelectorAll(".payable-checkbox").forEach(checkbox => {
+           checkbox.addEventListener("change", function() {
+               let amount = parseFloat(this.value);
+
+                if (this.checked) {
+                    payables_to_pay += amount;
+               } else {
+                 payables_to_pay -= amount;
+               }
+               document.getElementById("payablesToPay").innerText = payables_to_pay.toFixed(2);
+               document.getElementById("payables_to_pay").value = payables_to_pay.toFixed(2);
+           });
+       });
+
+        // Fetch remaining balance from backend
+        fetch(`/get_remaining_balance/${student.id}`)
+            .then(response => response.json())
+            .then(data => {
+                remainingBal = data.remaining_balance;
+                document.getElementById("totalBalance").textContent = total.toFixed(2);
+                document.getElementById("remainingBalance").textContent = remainingBal.toFixed(2);
+                document.getElementById("amount_rendered").value = "";
+                document.getElementById("changeAmount").textContent = "0";
+                document.getElementById("isPaid").textContent = remainingBal <= 0 ? "FULLY PAID!" : "";
+                document.getElementById("amount_rendered").disabled = remainingBal <= 0;
+            })
+            .catch(error => {
+                console.error("Error fetching balance:", error);
+                document.getElementById("isPaid").textContent = "Error loading balance.";
+            });
+
+            selectedStudent = student;
+    }
+
+    function calculateChange() {
+        const rendered = parseFloat(document.getElementById("amount_rendered").value) || 0;
+        const payablesToPay = parseFloat(document.getElementById("payables_to_pay").value || 0);
+
+        const change = Math.max(rendered - payablesToPay, 0);
+        const remaining = Math.max(payablesToPay - rendered, 0);
+        document.getElementById("changeAmount").textContent = change.toFixed(2);
+        document.getElementById("payablesToPay").textContent = remaining.toFixed(2);
+    }
+
+    function checkBeforeSubmit(event) {
+        const payablesToPay = parseFloat(document.getElementById("payables_to_pay").value || 0);
+        const rendered = parseFloat(document.getElementById("amount_rendered").value) || 0;
+
+        if (payablesToPay > rendered) {
+            alert("Amount rendered not enough");
+            event.preventDefault();
+            return false;
+        }
+
+        const updated_payables = [];
+
+        document.querySelectorAll(".payable-checkbox").forEach(checkbox => {
+            if (checkbox.checked && !checkbox.disabled) {
+                const payable = payables.find(p => p.payable_name === checkbox.name);
+                if (payable) {
+                    updated_payables.push(payable);
+                }
+            }
+        });
+
+        fetch(`/update_payable/${selectedStudent.id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updated_payables)
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || "Payment Successful!");
+            })
+            .catch(error => {
+                console.error("Error fetching balance:", error);
+                document.getElementById("isPaid").textContent = "Error loading balance.";
+            });
+
+        return true;
+    }
+</script>
+{% endblock %}

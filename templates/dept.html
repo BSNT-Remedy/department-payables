@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Select Your Department</title>
+
+</head>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('/static/tccc.jpg') no-repeat center/cover;
+}
+
+.container {
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.637);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 15px;
+            justify-items: center;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .department-box {
+            background: #fff;
+            border-color: #334EAC;
+            border-style: outset;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+            min-width: 150px;
+            max-width: 200px;
+        }
+
+        .department-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            background: #f0f8ff;
+        }
+
+        .department-box strong {
+            display: block;
+            font-size: 16px; /* Slightly smaller for better fit */
+            margin-bottom: 5px;
+        }
+
+        .department-box small {
+            font-size: 12px; /* Slightly smaller for better proportion */
+            color: #555;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        button.department-box {
+            border: none;
+            background: #fff;
+        }
+
+        .last {
+          grid-column: 2 / 3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>SELECT YOUR DEPARTMENT</h2>
+        <form action="#" method="POST">
+            <div class="grid">
+                <button name="selectedDepartment" value="CCS" class="department-box">
+                    <strong>College of Computer Studies</strong>
+                    <small>CCS Department</small>
+                </button>
+                <button name="selectedDepartment" value="CBA" class="department-box">
+                    <strong>College of Business Administration & Accountancy</strong>
+                    <small>CBA Department</small>
+                </button>
+                <button name="selectedDepartment" value="COC" class="department-box">
+                    <strong>College of Criminology</strong>
+                    <small>COC Department</small>
+                </button>
+                <button name="selectedDepartment" value="CHN" class="department-box">
+                    <strong>College of Nursing & Allied Health</strong>
+                    <small>CHN Department</small>
+                </button>
+                </button>
+                <button name="selectedDepartment" value="CHM" class="department-box">
+                    <strong>College of Hospitality Management</strong>
+                    <small>CHM Department</small>
+                </button>
+                <button name="selectedDepartment" value="CED" class="department-box">
+                    <strong>College of Education</strong>
+                    <small>CED Department</small>
+                </button>
+                <button name="selectedDepartment" value="TGP" class="department-box last">
+                    <strong>Graduate Program</strong>
+                     <small>TGP Department</small>
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Select Your Department</title>
+
+</head>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Center content vertically and horizontally with full viewport height and background image */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('/static/tccc.jpg') no-repeat center/cover;
+}
+
+/* Style the main container with padding, rounded corners, and semi-transparent background */
+.container {
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    width: 90%;
+    max-width: 900px;
+    background: rgba(255, 255, 255, 0.637);
+}
+
+/* Style the heading with margin and dark text color */
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Create a grid layout for buttons and select elements with spacing */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    gap: 15px;
+    justify-items: center;
+}
+
+/* Remove default link styling */
+a {
+    color: black;
+    text-decoration: none;
+}
+
+/* Style department boxes with white background, border, and shadow */
+.department-box {
+    background: #fff;
+    border-color: #334EAC;
+    border-style: outset;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%;
+    min-width: 150px;
+    max-width: 200px;
+}
+
+/* Add hover effects for department boxes with lift and shadow */
+.department-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    background: #f0f8ff;
+}
+
+/* Style strong text inside department boxes */
+.department-box strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+/* Style small text inside department boxes */
+.department-box small {
+    font-size: 12px;
+    color: #555;
+}
+
+/* Ensure form takes full width of container */
+form {
+    width: 100%;
+}
+
+/* Style buttons with class 'department-box' to match department-box styling */
+button.department-box {
+    border: none;
+    background: #fff;
+}
+
+/* Style select element to match department-box appearance */
+select {
+    background: #fff;
+    border-color: #334EAC;
+    border-style: outset;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%;
+    min-width: 150px;
+    max-width: 200px;
+    font-size: 16px;
+}
+
+/* Add hover effects for select element */
+select:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    background: #f0f8ff;
+}
+
+/* Style buttons with name 'selectedSem' to match department-box appearance */
+button[name="selectedSem"] {
+    background: #fff;
+    border-color: #334EAC;
+    border-style: outset;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%;
+    min-width: 150px;
+    max-width: 200px;
+    font-size: 16px;
+}
+
+/* Add hover effects for buttons with name 'selectedSem' */
+button[name="selectedSem"]:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    background: #f0f8ff;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>SELECT SEMESTER</h2>
+        <form action="#" method="POST">
+            <div class="grid">
+
+                S.Y. :
+                <select name="selectedSchoolYear">
+                    {% for x in range(2024, current_year + 10) %}
+                        <option value="{{ x }}-{{ x + 1 }}">{{ x }}-{{ x + 1 }}</option>
+                    {% endfor %}
+                </select>
+
+                <button name="selectedSem" value="_1ST">1ST</button>
+                <button name="selectedSem" value="_2ND">2ND</button>
+
+
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+{% block title %}Payable page{% endblock %}
+{% block style %}
+<style>
+    body{
+     background: #95A5A6;
+
+
+    }
+       
+ 
+    .content-box {  
+        margin-top: 30px; 
+        margin-left: auto;
+        margin-right: auto;
+        width: 900px;
+        padding: 25px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background: #ffffff;
+    }
+    h2 {
+        text-align: center;
+        font-size: 28px;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #E0D7C7;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .Listing {
+        margin-bottom: 30px;
+        font-size: 16px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        align-items: center;
+    }
+    input, select {
+        padding: 8px;
+        font-size: 16px;
+        border: 1px solid #D3D3D3;
+        border-radius: 5px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input[type="text"] {
+        width: 180px;
+        text-align: center;
+    }
+    input[type="number"] {
+        width: 120px;
+        text-align: center;
+    }
+    select {
+        width: 160px;
+        text-align: center;
+        appearance: none;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%23333" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+        background-color: #fff;
+    }
+    input:focus, select:focus {
+        border-color: #007BFF;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+        background-color: #f9f9f9;
+    }
+    th {
+        background-color: #334EAC;
+        color: #ffffff;
+        font-weight: bold;
+    }
+    .Add {
+        width: 120px;
+        height: 38px;
+        background: #28A745;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #ffffff;
+        border: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .Add:hover {
+        background: #218838;
+        transform: scale(1.05);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    .Sall {
+        width: 120px;
+        height: 38px;
+        background: #007BFF;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #ffffff;
+        border: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .Sall:hover {
+        background: #0056B3;
+        transform: scale(1.05);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    .Delete {
+        width: 100px;
+        height: 35px;
+        background: #DC3545;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: #ffffff;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    .Delete:hover {
+        background: #B02A37;
+        transform: scale(1.05);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    #editBtn, #saveChangesBtn {
+        width: 120px;
+        height: 38px;
+        background: #FEBA17;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #ffffff;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    #editBtn:hover, #saveChangesBtn:hover {
+        background: #5CB338;
+        transform: scale(1.05);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    .save {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+    }
+    @media (max-width: 768px) {
+        .content-box {
+            width: 90%;
+            padding: 15px;
+        }
+        .Listing {
+            flex-direction: column;
+            gap: 10px;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            max-width: 250px;
+        }
+        .Add, .Sall, #editBtn, #saveChangesBtn {
+            width: 100%;
+            max-width: 200px;
+        }
+        .save {
+            flex-direction: column;
+            gap: 10px;
+        }
+        table {
+            font-size: 14px;
+        }
+        th, td {
+            padding: 8px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    <h2>Item List</h2>
+    <form id="payableForm" class="Listing">
+        <input type="text" id="name" placeholder="Item Name" required>
+        <input type="number" id="price" placeholder="Price" required>
+        <select id="category" required>
+            <option value="" disabled selected>Choose category</option>
+            <option value="uniform">Uniform</option>
+            <option value="module">Module</option>
+            <option value="penalty">Penalty</option>
+            <option value="org">Organization</option>
+            <option value="defense">Defense</option>
+            <option value="others">Others</option>
+        </select>
+        <button type="submit" class="Add">Add</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="itemsList"></tbody>
+    </table>
+
+    <div class="save">
+        <button id="editBtn" onclick="editItems()">Edit</button>
+        <button id="saveChangesBtn" onclick="saveAllChanges()" style="display: none;">Save</button>
+        <form id="submitPayablesForm" method="POST" action="/submit_payables">
+            <button type="submit" class="Sall">Submit All</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    let payablesList = [];
+    let isEditing = false;
+
+    document.getElementById('payableForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const price = document.getElementById("price").value.trim();
+        const category = document.getElementById("category").value;
+
+        if (!name || !price || !category) {
+            alert('Please fill out all fields including category.');
+            return;
+        }
+
+        payablesList.push({ payable_name: name, amount: parseFloat(price), category: category, isEditing: false });
+
+        displayItems();
+
+        // Clear inputs
+        document.getElementById("name").value = "";
+        document.getElementById("price").value = "";
+        document.getElementById("category").value = "";
+    });
+
+    function displayItems() {
+        const tableBody = document.getElementById('itemsList');
+        tableBody.innerHTML = '';
+
+        payablesList.forEach((item, index) => {
+            if (item.isEditing) {
+                tableBody.innerHTML += `
+                <tr>
+                    <td><input type="text" id="name-${index}" value="${item.payable_name}"></td>
+                    <td><input type="number" id="price-${index}" value="${item.amount}"></td>
+                    <td>
+                        <select id="category-${index}">
+                            <option value="uniform" ${item.category === "uniform" ? "selected" : ""}>Uniform</option>
+                            <option value="module" ${item.category === "module" ? "selected" : ""}>Module</option>
+                            <option value="penalty" ${item.category === "penalty" ? "selected" : ""}>Penalty</option>
+                            <option value="org" ${item.category === "org" ? "selected" : ""}>Organization</option>
+                            <option value="defense" ${item.category === "defense" ? "selected" : ""}>Defense</option>
+                            <option value="others" ${item.category === "others" ? "selected" : ""}>Others</option>
+                        </select>
+                    </td>
+                    <td><button class="Delete" onclick="deleteItem(${index})">Delete</button></td>
+                </tr>`;
+            } else {
+                tableBody.innerHTML += `
+                <tr>
+                    <td>${item.payable_name}</td>
+                    <td>₱${item.amount.toFixed(2)}</td>
+                    <td>${capitalizeFirstLetter(item.category)}</td>
+                    <td><button class="Delete" onclick="deleteItem(${index})">Delete</button></td>
+                </tr>`;
+            }
+        });
+    }
+
+    function capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function editItems() {
+        isEditing = true;
+        payablesList.forEach(item => item.isEditing = true);
+        document.getElementById('editBtn').style.display = 'none';
+        document.getElementById('saveChangesBtn').style.display = 'inline-block';
+        displayItems();
+    }
+
+    function saveAllChanges() {
+        payablesList.forEach((item, index) => {
+            const nameInput = document.getElementById(`name-${index}`).value.trim();
+            const priceInput = document.getElementById(`price-${index}`).value.trim();
+            const categoryInput = document.getElementById(`category-${index}`).value;
+
+            payablesList[index] = {
+                payable_name: nameInput,
+                amount: parseFloat(priceInput),
+                category: categoryInput,
+                isEditing: false
+            };
+        });
+        isEditing = false;
+        document.getElementById('editBtn').style.display = 'inline-block';
+        document.getElementById('saveChangesBtn').style.display = 'none';
+        displayItems();
+    }
+
+    function deleteItem(index) {
+        payablesList.splice(index, 1);
+        displayItems();
+    }
+
+    // Submit all payables to backend
+    document.getElementById('submitPayablesForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        if (payablesList.length === 0) {
+            alert("No payables to submit.");
+            return;
+        }
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/submit_payables", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                alert("Payables successfully submitted!");
+                payablesList = [];
+                document.getElementById("itemsList").innerHTML = "";
+            } else {
+                alert("Failed to submit payables.");
+                console.error(xhr.responseText);
+            }
+        };
+        xhr.send(JSON.stringify(payablesList));
+    });
+
+    // Initial display
+    displayItems();
+</script>
+{% endblock %}
